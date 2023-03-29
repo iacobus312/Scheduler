@@ -65,8 +65,9 @@ public class Scheduler {
         }
         // pseudocode, 
         // run at first with shiftc = 0
-        // run recursively until shiftc = 1
+        // run recursively until shiftc = num_shifts
         // basically for every possible nurse that can have a certain shift, give her that shift, and then run with shiftc+1
+        // perhaps add a for loop that dictates when go up a tier
         // conditions is that nurse can have that shift and cannot already be placed into a shift
         // find a way to connect the recursive loop together
     }

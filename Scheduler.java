@@ -7,6 +7,7 @@ public class Scheduler {
         String string_num = input.nextLine(); // number of shifts needed
         int num = Integer.parseInt(string_num);
         int shift_counter = 0;
+        int nurse_counter = 0;
         String[] nurses = new String[num]; // to store input data about nurses
         String[] shifts = new String[num]; // to track shifts
 
@@ -40,13 +41,11 @@ public class Scheduler {
         the nurses can fulfill
         nurses will just keep track of the names
          */
-        for (String shiftnum : shifts) {
-            System.out.println(shiftnum);
-        }
-        solve(num, shift_counter, nurses, shifts);
+        String result = solve(num, shift_counter, nurse_counter, nurses, shifts);
+        System.out.print(result);
     }
 
-    public static String solve(int num_shifts, int shiftc, String[] shifts_requested, String[] schedule) {
+    public static String solve(int num_shifts, int shiftc, int nursec, String[] nurses, String[] schedule) {
         /*
         shifts_requested:
         1
@@ -59,16 +58,21 @@ public class Scheduler {
         C
          */
         if (shiftc == num_shifts) {
+            // print all the values in schedule
+            for (String shift : schedule) {
+                System.out.println(shift);
+            }
             return "success!";
         } else {
+            String str_shiftc = Integer.toString(shiftc);
+            if (nurses[nursec].contains(str_shiftc) && !schedule[nursec].contains(str_shiftc)) {
+                schedule[shiftc] = schedule[shiftc] + " " + str_shiftc;
+                String return_value = solve(num_shifts, shiftc++, nursec, nurses, schedule);
+                if (return_value.equals("impossible!")) {
+                    solve(num_shifts, shiftc, nursec++, nurses, schedule);
+                }
+            }
             return "impossible!";
         }
-        // pseudocode, 
-        // run at first with shiftc = 0
-        // run recursively until shiftc = num_shifts
-        // basically for every possible nurse that can have a certain shift, give her that shift, and then run with shiftc+1
-        // perhaps add a for loop that dictates when go up a tier
-        // conditions is that nurse can have that shift and cannot already be placed into a shift
-        // find a way to connect the recursive loop together
     }
 }

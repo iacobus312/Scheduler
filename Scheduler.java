@@ -1,78 +1,80 @@
 import java.util.Scanner;
 
-public class Scheduler {
+
+public class Scheduler2 {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
         String string_num = input.nextLine(); // number of shifts needed
         int num = Integer.parseInt(string_num);
-        int shift_counter = 0;
-        int nurse_counter = 0;
         String[] nurses = new String[num]; // to store input data about nurses
         String[] shifts = new String[num]; // to track shifts
 
         for (int i = 0; i < num; i++) {
-            nurses[i] = input.nextLine() + input.nextLine();
-            nurses[i] = nurses[i].replaceAll("\\s", "");
-            shifts[i] = Character.toString(nurses[i].charAt(0));
-            nurses[i] = nurses[i].substring(2);
+            shifts[i] = Character.toString(input.nextLine().charAt(0));
+            nurses[i] = input.nextLine();
         }
 
-        /*
-        for (String i : nurses) {
-            System.out.println(i);
-        }
-
-        Example Input:
-        3
-        A 1
-        1
-        B 2
-        1 2
-        C 2
-        0 2
-
-        Output:
-        1
-        12
-        02
-
-        Indexes of i are already sorted per nurse, aka i[0] = A, i[1] = B, etc. Numbers dicate which shifts
-        the nurses can fulfill
-        nurses will just keep track of the names
-         */
-        String result = solve(num, shift_counter, nurse_counter, nurses, shifts);
+        String result = solve(num, nurses, shifts);
         System.out.print(result);
     }
 
-    public static String solve(int num_shifts, int shiftc, int nursec, String[] nurses, String[] schedule) {
-        /*
-        shifts_requested:
-        1
-        12
-        02
+    public static String solve(int num_shifts, String[] nurses, String[] schedule) {
+        boolean status = true;
+        for (int i = 0; i < num_shifts; i++) {
+            if (schedule[i].length() == 1) {
+                status = false;
+                break;
+            }
+        }
 
-        schedule:
-        A
-        B
-        C
-         */
-        if (shiftc == num_shifts) {
+        if (status) { // stop condition
+            System.out.println("Success condition met!");
             // print all the values in schedule
             for (String shift : schedule) {
                 System.out.println(shift);
             }
             return "success!";
         } else {
-            String str_shiftc = Integer.toString(shiftc);
-            if (nurses[nursec].contains(str_shiftc) && !schedule[nursec].contains(str_shiftc)) {
-                schedule[shiftc] = schedule[shiftc] + " " + str_shiftc;
-                String return_value = solve(num_shifts, shiftc++, nursec, nurses, schedule);
-                if (return_value.equals("impossible!")) {
-                    solve(num_shifts, shiftc, nursec++, nurses, schedule);
+            System.out.println();
+            System.out.println("Current Schedule: ");
+            for (String i : schedule) {
+                System.out.print(i);
+            }
+            // Combines all the nurses currents assignment into one string
+            // This will make it easier to see if a shift has been assigned
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < num_shifts; i++) {
+                sb.append(schedule[i]);
+            }
+            System.out.println();
+            System.out.println("Stringbuilder: " + sb);
+
+            for (int i = 0; i < num_shifts; i++) {
+                // running through each nurse's schedule
+                if (schedule[i].length() == 1) {
+                    // if the nurse is not assigned a shift
+                    for (String Shift_num : nurses[i].split(" ")) {
+                        System.out.println("Shift_num: " + Shift_num);
+                        // running through every possible shift for that nurse
+                        if (sb.toString().contains(Shift_num)) { // if shift has not already been assigned
+                            System.out.println("Shift already assigned!");
+                        } else {
+                            System.out.println("Before Schedule[i]: " + schedule[i]);
+                            String old_schedule = schedule[i];
+                            schedule[i] = schedule[i] + " " + Shift_num; // add shift to the nurse
+                            System.out.println("After Schedule[i]: " + schedule[i]);
+                            String result = solve(num_shifts, nurses, schedule); // run with updated schedule
+                            if (result.equals("success!")) {
+                                return ("success!");
+                            } else {
+                                schedule[i] = old_schedule;
+                            }
+                        }
+                    }
                 }
             }
-            return "impossible!";
         }
+        return "impossible!";
     }
 }

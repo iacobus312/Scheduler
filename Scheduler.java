@@ -78,3 +78,73 @@ public class Scheduler2 {
         return "impossible!";
     }
 }
+
+/*
+Test cases:
+
+Input:
+2
+A 2
+0 1
+B 1
+0
+
+Intended Output:
+A 1
+B 0
+
+Input2:
+2
+A 1
+0
+B 1
+0
+
+IntendedOutput2:
+impossible
+
+Input3:
+3
+A 1
+1
+B 2
+1 2
+C 2
+0 2
+
+IntendedOutput3:
+A 1
+B 2
+C 0
+
+Input4:
+8
+A 2
+0 4
+B 4
+0 2 5 7
+C 3
+1 4 6
+D 3
+1 2 4
+E 2
+4 6
+F 2
+2 7
+G 1
+0
+H 3
+1 3 5
+
+IntendedOutput4:
+A 4
+B 5
+C 1
+D 2
+E 6
+F 7
+G 0
+H 3
+
+
+*/
